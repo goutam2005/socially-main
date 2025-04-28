@@ -52,7 +52,15 @@ export const saveTokenToCookies = async (
     return false;
   }
 };
-
+export const saveNewToken = async(newtoken:string)=>{
+  try {
+    const cookie = await cookies();
+    cookie.set("authtoken", newtoken, getCookieOptions(24 * 60 * 60)); // 1 day
+    return true;
+  } catch (error) {
+    console.error("Error saving tokens to cookies:", error);
+  }
+}
 export const deleteTokenFromCookies = async () => {
   try {
     const cookie = await cookies();

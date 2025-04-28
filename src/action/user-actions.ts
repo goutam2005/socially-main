@@ -4,6 +4,7 @@ import {
   deleteTokenFromCookies,
   getTokenFromCookies,
   refreshToken,
+  saveNewToken,
   saveTokenToCookies,
   token,
   verifyRefreshToken,
@@ -131,18 +132,17 @@ export const getCurrentUser = async () => {
   }
 };
 export const addNewToken = async () => {
-  try {  
+  try {
     const authtoken = await getTokenFromCookies();
-    if (!authtoken) return { success: false, error: "No token found" };     
-    const { refreshToken } = authtoken;  
+    if (!authtoken) return { success: false, error: "No token found" };
+    const { refreshToken } = authtoken;
     const verify = await verifyRefreshToken(refreshToken as string);
     if (!verify) return { success: false, error: "Invalid token" };
-   
-    if (typeof verify === "object" && "userID" in verify) {
-      await token(verify.userID);
-    } else {
-      throw new Error("Invalid token payload");
-    }
+
+    const Newtoken = await token(typeof verify === 'string' ? verify : verify.userID);
+    await saveNewToken(Newtoken);
+
+    return { success: true, Newtoken };
   } catch (error) {
     console.error("Error Refress users:", error);
     return {

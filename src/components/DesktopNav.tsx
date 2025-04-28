@@ -46,7 +46,8 @@ function DesktopNavbar() {
         console.log("Response", response);
         if (response.error === "Invalid token"){
           console.log("Invalid token");
-          addNewToken()
+         const token = await addNewToken()
+         console.log("Token", token);
         }
           if (response.success && response.user) {
             setUser(response.user as User);
